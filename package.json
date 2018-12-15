@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "musicxml-interfaces": "0.0.10",
     "opensheetmusicdisplay": "^0.6.6",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-scripts": "2.1.1",
-    "vexflow-musicxml": "^0.3.1"
+    "vexflow-musicxml": "^0.3.1",
+    "xml2js": "^0.4.19"
   },
   "scripts": {
     "start": "react-scripts start",

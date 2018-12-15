@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {OpenSheetMusicDisplay} from 'opensheetmusicdisplay';
+import analyze from './utils/analizer';
 
 export class FileInput extends Component {
     componentDidMount() {
@@ -18,14 +19,9 @@ export class FileInput extends Component {
     }
 
     selectSampleOnChange = (str) => {
-        console.log(str);
         this.state.openSheetMusicDisplay.load(str).then(
             () => this.state.openSheetMusicDisplay.render(),
             (e) => this.errorLoadingOrRenderingSheet(e, "rendering")
-        ).then(
-            () => {
-            },
-            (e) => this.errorLoadingOrRenderingSheet(e, "loading")
         );
     };
 
@@ -38,7 +34,15 @@ export class FileInput extends Component {
     uploadFile = (event) => {
         let file = event.target.files[0];
         const reader = new FileReader();
-        reader.onload = (res) => this.selectSampleOnChange(res.target.result);
+        reader.onload = (res) => {
+            this.selectSampleOnChange(res.target.result);
+
+            const text = res.target.result;
+
+            analyze(text).then((analizedScore) => {
+                this.selectSampleOnChange(analizedScore);
+            });
+        };
 
         const filename = file.name;
         if (filename.toLowerCase().indexOf(".xml") > 0
@@ -52,10 +56,10 @@ export class FileInput extends Component {
     };
 
     render() {
-        return <span>
-        <input type="file"
-               name="myFile"
-               onChange={this.uploadFile}/>
-      </span>
+        return (
+            <span>
+                <input type="file" name="myFile" onChange={this.uploadFile}/>
+            </span>
+        )
     }
 }
