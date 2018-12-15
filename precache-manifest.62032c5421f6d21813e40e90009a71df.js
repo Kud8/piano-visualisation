@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/piano-visualisation/static/css/main.01ac9cdc.chunk.css"
   },
   {
-    "revision": "eb8918b88fe5b7dd25c70e82831603a5",
+    "revision": "0bdfe11ed650ba21f1ccd016d5808a28",
     "url": "/piano-visualisation/index.html"
   }
 ];
