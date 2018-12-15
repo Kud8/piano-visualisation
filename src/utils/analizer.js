@@ -22,7 +22,20 @@ export default (score) => new Promise((resolve) => {
     });
 });
 
-const getTupletCount = (measure) => {
+export const getLevel = (measure) => {
+    const graceLevel = getGraceCount(measure) > 0 ? Math.min(7 + getGraceCount(measure) * 5, 20) : 0;
+    const trillsLevel = getTrillsCount(measure) > 0 ? Math.min(7 + getTrillsCount(measure) * 5, 15) : 0;
+    const tupletsLevel = getTupletCount(measure) > 0 ? Math.min(7 + getTupletCount(measure) * 5, 15) : 0;
+    const chordsLevel = getUniqueChordsLevel(measure);
+    const tempLevel = getTempLevel(measure);
+
+    return Math.min(
+        Math.ceil((graceLevel + trillsLevel + tupletsLevel + chordsLevel + tempLevel) / 16),
+        4
+    ) || 1;
+};
+
+export const getTupletCount = (measure) => {
     let count = 0;
     measure.note.forEach((note) => {
         if (note.notations && note.notations[0] && note.notations[0].tuplet) {
@@ -32,7 +45,7 @@ const getTupletCount = (measure) => {
     return Math.ceil(count / 2);
 };
 
-const getGraceCount = (measure) => measure.note
+export const getGraceCount = (measure) => measure.note
     .filter((note) =>
         note.grace !== undefined
         && (
@@ -46,7 +59,7 @@ const getGraceCount = (measure) => measure.note
     )
     .length;
 
-const getTrillsCount = (measure) => measure.note
+export const getTrillsCount = (measure) => measure.note
     .filter((note) =>
         note.notations && note.notations[0]
         && note.notations[0].ornaments && note.notations[0].ornaments[0]
@@ -64,7 +77,7 @@ export const getNoteName = (note) => {
     return '';
 };
 
-const getUniqueChordsLevel = (measure) => {
+export const getUniqueChordsLevel = (measure) => {
     const chords = [];
     let currentChord = '';
     measure.note.forEach((note, i) => {
@@ -94,7 +107,7 @@ const getUniqueChordsLevel = (measure) => {
     return Math.min(uniqueChords.length * 3, 10) + hardness;
 };
 
-const getTempLevel = (measure) => {
+export const getTempLevel = (measure) => {
     const allTemps = {};
     const getPercentage = (type) => allTemps[type] / measure.note.length * 100;
 
@@ -135,17 +148,4 @@ const getTempLevel = (measure) => {
     }
 
     return Math.min(level, 20) * 2;
-};
-
-const getLevel = (measure) => {
-    const graceLevel = getGraceCount(measure) > 0 ? Math.min(7 + getGraceCount(measure) * 5, 20) : 0;
-    const trillsLevel = getTrillsCount(measure) > 0 ? Math.min(7 + getTrillsCount(measure) * 5, 15) : 0;
-    const tupletsLevel = getTupletCount(measure) > 0 ? Math.min(7 + getTupletCount(measure) * 5, 15) : 0;
-    const chordsLevel = getUniqueChordsLevel(measure);
-    const tempLevel = getTempLevel(measure);
-
-    return Math.min(
-        Math.ceil((graceLevel + trillsLevel + tupletsLevel + chordsLevel + tempLevel) / 16),
-        4
-    ) || 1;
 };
