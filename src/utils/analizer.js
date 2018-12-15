@@ -53,7 +53,7 @@ const getTrillsCount = (measure) => measure.note
         && note.notations[0].ornaments[0]['trill-mark'] !== undefined)
     .length;
 
-const getNoteName = (note) => {
+export const getNoteName = (note) => {
     if (note.pitch) {
         const pitch = note.pitch[0];
         const step = pitch.step ? pitch.step[0] : '';
