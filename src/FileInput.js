@@ -34,17 +34,23 @@ export class FileInput extends Component {
     uploadFile = (event) => {
         let file = event.target.files[0];
         const reader = new FileReader();
+        const filename = file.name;
+
         reader.onload = (res) => {
             this.selectSampleOnChange(res.target.result);
-
             const text = res.target.result;
 
-            analyze(text).then((analizedScore) => {
-                this.selectSampleOnChange(analizedScore);
-            });
+            if (filename.toLowerCase().indexOf(".musicxml") > 0 || filename.toLowerCase().indexOf(".xml") > 0) {
+                analyze(text).then((analizedScore) => {
+                    this.selectSampleOnChange(analizedScore);
+                }).catch((e) => {
+                    console.warn("Can't analize this file.");
+                });
+            } else {
+                console.warn("Can't analize this type of file. Please upload .musicxml or .xml");
+            }
         };
 
-        const filename = file.name;
         if (filename.toLowerCase().indexOf(".xml") > 0
             || filename.toLowerCase().indexOf(".musicxml") > 0) {
             reader.readAsText(file);
